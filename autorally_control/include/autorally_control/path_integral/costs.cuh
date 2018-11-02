@@ -38,7 +38,7 @@
 #include "cnpy.h"
 #include <autorally_control/PathIntegralParamsConfig.h>
 #include <vector>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <opencv2/core/core.hpp>
 #include <ros/ros.h>
 #include <cuda_runtime.h>
