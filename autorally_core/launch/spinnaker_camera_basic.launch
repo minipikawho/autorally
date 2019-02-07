@@ -47,7 +47,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     </node>
 
     <node pkg="dynamic_reconfigure" type="dynparam" name="dynamic_configurator"
-          args="load spinnaker_camera_nodelet $(dirname)/flir_test_dynparams.yaml">
+          args="load spinnaker_camera_nodelet $(find autorally_core)/launch/flir_default_dynconfig.yaml">
     </node>
   </group>
 </launch>
