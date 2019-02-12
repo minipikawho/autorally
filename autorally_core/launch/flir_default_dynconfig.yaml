@@ -2,7 +2,7 @@
 
 !!python/object/new:dynamic_reconfigure.encoding.Config
 dictitems:
-  image_format_color_coding: RGB8Packed
+  image_format_color_coding: BayerRG8
 
   acquisition_frame_rate_enable: true
   acquisition_frame_rate: 60.0
@@ -28,7 +28,7 @@ dictitems:
   sharpening_threshold: 0.1
   sharpness: 1024.0
 
-  auto_white_balance: Continuous  # 'Off' not supported by Spinnaker and/or FLIR ROS driver
+  auto_white_balance: Continuous  # 'Off' does not seem to be supported by Spinnaker and/or FLIR ROS driver
 
   enable_trigger: 'Off'
   line_mode: Input
