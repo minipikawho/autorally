@@ -3,8 +3,10 @@
 
   <arg name="enable_trigger" default="false"/>
 
-  <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" machine="autorally-master" output="screen" args="manager" required="true" respawn="false"/>
-  <!-- <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" machine="autorally-master" output="screen" args="manager" required="true" respawn="false" launch-prefix="gdb -ex run - -args"/> -->
+  <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" machine="autorally-master" output="screen" args="manager" required="false" respawn="false"/>
+  <!-- <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" machine="autorally-master" 
+        output="screen" args="manager" required="true" respawn="false" 
+        launch-prefix="gdb -ex run - -args"/> -->
 
   <group if="$(optenv AR_CHASSIS_NEW true)">
     <group if="$(arg enable_trigger)">
@@ -25,5 +27,5 @@
     <arg name="side" value="right" />
     <arg name="enable_trigger" value="$(arg enable_trigger)" />
   </include>
-
+  
 </launch>
