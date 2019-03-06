@@ -1,9 +1,7 @@
 #include "CameraAutoBalance.h"
 #include <pluginlib/class_list_macros.h>
 
-using namespace FlyCapture2;
-
-PLUGINLIB_EXPORT_CLASS( autorally_core::CameraAutoBalance,  nodelet::Nodelet)
+PLUGINLIB_DECLARE_CLASS(autorally_core, CameraAutoBalance, autorally_core::CameraAutoBalance, nodelet::Nodelet)
 
 namespace autorally_core
 {
@@ -30,16 +28,19 @@ void CameraAutoBalance::onInit()
     cb = boost::bind(&CameraAutoBalance::configCallback, this, _1, _2);
     dynamic_reconfigure_server_->setCallback(cb);
 
+    std::string camera_type;
+
     pnh.getParam("minShutter", min_shutter_);
     pnh.getParam("maxShutter", max_shutter_);
     pnh.getParam("calibrationStep", calibration_step_);
     pnh.getParam("cameraSerialNumber", camera_serial_number_);
+
     roi_ = cv::Rect(roi_x_top_left_, roi_y_top_left_, roi_x_bottom_right_ - roi_x_top_left_, roi_y_bottom_right_ - roi_y_top_left_);
 
-    BusManager busMgr;
-    PGRGuid guid;
-    busMgr.GetCameraFromSerialNumber((unsigned int)camera_serial_number_, &guid);
-    err_ = cam_.Connect(&guid);
+
+    cam_adjuster_->SetSerial(camera_serial_number_);
+
+    cam_adjuster_.Connect();
     cameraParametersInitialization();
 
 
@@ -73,19 +74,11 @@ void CameraAutoBalance::configCallback(const camera_auto_balance_paramsConfig &c
 }
 
 void CameraAutoBalance::cameraParametersInitialization() {
-    prop_.onOff = true;
-    prop_.autoManualMode = false;
-    prop_.absControl = true;
-
     u_shutter_ = min_shutter_;
-    prop_.type = SHUTTER;
-    prop_.absValue = u_shutter_;
-    err_ = cam_.SetProperty(&prop_);
+    cam_adjuster_.SetShutter(u_shutter_);
 
     u_gain_ = min_gain_;
-    prop_.type = GAIN;
-    prop_.absValue = u_gain_;
-    err_ = cam_.SetProperty(&prop_);
+    cam_adjuster_.SetGain(u_gain_);
 }
 
 void CameraAutoBalance::imageCallback(const sensor_msgs::Image::ConstPtr& msg)
@@ -132,32 +125,24 @@ void CameraAutoBalance::autoExposureControl(const cv_bridge::CvImageConstPtr &cv
         if (fabs(max_shutter_ - u_shutter_) < epsilon_shutter_) {
             u_gain_ *= 1 + k_gain_ * msv_error_;
             u_gain_ = saturate(u_gain_, min_gain_, max_gain_);
-            prop_.type = GAIN;
-            prop_.absValue = u_gain_;
-            err_ = cam_.SetProperty(&prop_);
+            cam_adjuster_.SetGain(u_gain_);
         }
         else {
             u_shutter_ *= 1 + k_shutter_ * msv_error_;
             u_shutter_ = saturate(u_shutter_, min_shutter_, max_shutter_);
-            prop_.type = SHUTTER;
-            prop_.absValue = u_shutter_;
-            err_ = cam_.SetProperty(&prop_);
+            cam_adjuster_.SetShutter(u_shutter_);
         }
     }
     else if (msv_error_ < -msv_error_tolerance_) {
         if (fabs(min_gain_ - u_gain_) < epsilon_gain_) {
             u_shutter_ *= 1 + k_shutter_ * msv_error_;
             u_shutter_ = saturate(u_shutter_, min_shutter_, max_shutter_);
-            prop_.type = SHUTTER;
-            prop_.absValue = u_shutter_;
-            err_ = cam_.SetProperty(&prop_);
+            cam_adjuster_.SetShutter(u_shutter_);
         }
         else {
             u_gain_ *= 1 + k_gain_ * msv_error_;;
             u_gain_ = saturate(u_gain_, min_gain_, max_gain_);
-            prop_.type = GAIN;
-            prop_.absValue = u_gain_;
-            err_ = cam_.SetProperty(&prop_);
+            cam_adjuster_.SetGain(u_gain_);
         }
     }
 }

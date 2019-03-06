@@ -41,15 +41,13 @@
 #include <sensor_msgs/Image.h>
 #include <image_transport/image_transport.h>
 #include <opencv2/opencv.hpp>
-#include <flycapture/FlyCapture2.h>
 #include <cv_bridge/cv_bridge.h>
 #include <dynamic_reconfigure/server.h>
 #include <dynamic_reconfigure/Reconfigure.h>
 #include <dynamic_reconfigure/Config.h>
 #include <dynamic_reconfigure/IntParameter.h>
 #include <autorally_core/camera_auto_balance_paramsConfig.h>
-
-using namespace FlyCapture2;
+#include "CameraAdjuster.hpp"
 
 namespace autorally_core
 {
@@ -69,7 +67,11 @@ namespace autorally_core
  *  setpoint. There is also an option to plot the ROI and the
  *  gray histogram. A dynamic reconfigure server is created for
  *  changing these parameters.
+ *
+ *  It is templated on the CameraAdjuster implementation so that it
+ *  can be built for either FlyCapture2 or Spinnaker independently
  */
+template<typename Adjuster>
 class CameraAutoBalance : public nodelet::Nodelet {
 public:
     /**
@@ -160,9 +162,7 @@ protected:
     ros::Subscriber sub_;   ///<Subscriber for image data
     image_transport::Publisher roi_pub_;    ///<Publisher for ROI image
     image_transport::Publisher hist_pub_;   ///<Publisher for histogram image
-    Camera cam_;    ///<PointGrey camera handle
-    Property prop_; ///<PointGrey property handle
-    Error err_;     ///<PointGrey error handle
+    std::unique_ptr<CameraAdjuster> cam_adjuster_;   ///Handle for adjusting camera properties
     unsigned long int frame_counter_; ///<Counts number of received frames
     int calibration_step_; ///<Determines how often auto exposure control is called.
     int camera_serial_number_;  ///<Camera serial number in decimal
