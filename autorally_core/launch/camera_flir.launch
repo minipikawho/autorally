@@ -48,9 +48,9 @@
 
   </group>
   
-  <!-- <include file="$(find autorally_core)/launch/camera_auto_balance.launch">
+  <include file="$(find autorally_core)/launch/camera_auto_balance_flir.launch">
     <arg name="serial" value="$(arg serial)" />
     <arg name="side" value="$(arg side)" />
-  </include> -->
+  </include>
 
 </launch>

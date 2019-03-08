@@ -4,7 +4,7 @@ using namespace FlyCapture2;
 
 namespace autorally_core {
 
-void Connect() {
+void FlycaptureAdjuster::Connect() {
     BusManager busMgr;
     PGRGuid guid;
 
@@ -17,13 +17,13 @@ void Connect() {
     prop_.absControl = true;
 }
 
-void SetShutter(double x) {
+void FlycaptureAdjuster::SetShutter(double x) {
     prop_.type = SHUTTER;
     prop_.absValue = x;
     err_ = cam_.SetProperty(&prop_);
 }
 
-void SetGain(double x) {
+void FlycaptureAdjuster::SetGain(double x) {
     prop_.type = GAIN;
     prop_.absValue = x;
     err_ = cam_.SetProperty(&prop_);
