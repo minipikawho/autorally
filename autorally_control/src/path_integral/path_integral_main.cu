@@ -31,6 +31,9 @@
  * @brief Main file model predictive path integral control.
  *
  ***********************************************/
+
+#define __CUDACC_VER__ __CUDACC_VER_MAJOR__ * 10000 + __CUDACC_VER_MINOR__ * 100 + __CUDACC_VER_BUILD__
+
 #include <autorally_control/path_integral/meta_math.h>
 #include <autorally_control/path_integral/param_getter.h>
 
@@ -46,6 +49,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+
 
 #ifdef MPPI_NNET_USING_CONSTANT_MEM__
 __device__ __constant__ float NNET_PARAMS[param_counter(6,32,32,4)];

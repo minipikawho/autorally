@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-find_package(OpenCV 2.4 REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(Eigen REQUIRED)
 
+include_directories(include ${OpenCV_INCLUDE_DIRS})
 include_directories(include ${EIGEN_INCLUDE_DIRS})
 
 ################################################################################
@@ -56,15 +57,15 @@ set(
 
 add_definitions(-DUSE_BASIS_FUNC_MODEL__)
 
-cuda_add_executable(path_integral_bf
-                    path_integral_main.cu
-                    autorally_plant
-                    param_getter
-                    )
+#cuda_add_executable(path_integral_bf
+#                    path_integral_main.cu
+#                    autorally_plant
+#                    param_getter
+#                    )
 
-add_dependencies(path_integral_bf autorally_msgs_gencpp autorally_core ${PROJECT_NAME}_gencfg)
+#add_dependencies(path_integral_bf autorally_msgs_gencpp autorally_core ${PROJECT_NAME}_gencfg)
 
-target_link_libraries(path_integral_bf /usr/local/lib/libcnpy.so ${CUDA_curand_LIBRARY} ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+#target_link_libraries(path_integral_bf /usr/local/lib/libcnpy.so ${CUDA_curand_LIBRARY} ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 remove_definitions(-DUSE_BASIS_FUNC_MODEL__)
 

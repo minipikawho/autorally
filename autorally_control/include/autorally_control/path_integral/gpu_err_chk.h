@@ -34,6 +34,8 @@
 #ifndef HANDLE_ERROR_H_
 #define HANDLE_ERROR_H_
 
+#define __CUDACC_VER__ __CUDACC_VER_MAJOR__ * 10000 + __CUDACC_VER_MINOR__ * 100 + __CUDACC_VER_BUILD__
+
 #include <cuda_runtime.h>
 
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
