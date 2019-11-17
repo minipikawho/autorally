@@ -34,14 +34,11 @@
  * @details Contains ArdionoOnboard class implementation
  ***********************************************/
 #include "CameraTrigger.h"
-
 #include <pluginlib/class_list_macros.h>
-
 #include<boost/lexical_cast.hpp>
-
 #include <numeric>
 
-PLUGINLIB_DECLARE_CLASS(autorally_core, CameraTrigger, autorally_core::CameraTrigger, nodelet::Nodelet)
+PLUGINLIB_EXPORT_CLASS(autorally_core::CameraTrigger, nodelet::Nodelet)
 
 namespace autorally_core
 {
